@@ -19,7 +19,8 @@ namespace circle_project
         bool isActive = false, dragging = false, resize = false;
         //active state handlers
         Rectangle topRect, leftRect, bottomRect, rightRect, mainRect;
-
+        int flagNum = 0; 
+       
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -27,10 +28,30 @@ namespace circle_project
             {
                 var rec1 = new System.Drawing.Rectangle(e.X, e.Y, 10, 10);
 
-                if (rec1.IntersectsWith(topRect))
+                if (rightRect.IntersectsWith(rec1))
                 {
                     this.resize = true;
                     this.dragging = false;
+                    flagNum = 4;
+
+                }
+                else if (topRect.IntersectsWith(rec1))
+                {
+                    this.resize = true;
+                    this.dragging = false;
+                    flagNum = 1;
+                }
+                else if (rec1.IntersectsWith(leftRect))
+                {
+                    this.resize = true;
+                    this.dragging = false;
+                    flagNum = 2;
+                }
+                else if (rec1.IntersectsWith(bottomRect))
+                {
+                    this.resize = true;
+                    this.dragging = false;
+                    flagNum = 3;
                 }
                 else
                 {
@@ -52,8 +73,21 @@ namespace circle_project
             }
             if (this.resize)
             {
-                //(e.Location.Y - deltaY)
-                height = mainRect.Top - e.Location.Y;
+
+
+                switch (flagNum)
+                {
+                    case 1: height = e.Location.Y - deltaY;
+                        break;
+                    case 2: width = -(e.Location.X + deltaX);
+                        break;
+                    case 3:
+                        height = e.Location.Y + deltaY;
+                        break;
+                    case 4: width = e.Location.X - deltaX;//right resize DONE
+                        break;
+                }
+
                 Invalidate();
             }
         }
